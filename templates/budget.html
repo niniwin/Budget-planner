@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}My Daily Budget Planner{% endblock %}
+{% block content %}
+    <div class="diary-box">
+    <form class="row g-3 mb-3 justify-content-left">
+
+    <div class="col-auto">
+        <input type="month"
+            id="monthPicker"
+            class="form-control"
+            name="month"
+            value="{{request.args.get('month',month)}}">
+    </div>
+
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">
+        Filter
+        </button>
+    </div>
+
+    <div class="col-auto">
+        <a href="{{ url_for('budget.planner') }}" class="btn btn-secondary">
+        Reset
+        </a>
+    </div>
+
+    </form>
+    <h2 class="text-center mb-4" style="color:#c2185b;">
+        🌸 My Daily Budget Planner for {{ request.args.get('month', month) }}
+    </h2>
+    
+   
+    <form method="POST" action="/add-transaction">
+    <div class="planner-book">
+        <div class="planner-page">
+            <h4 class="page-title"> Income / Expenses</h4>
+            <div class="table-responsive">
+             
+            <table class="table table-bordered table-striped text-center">
+                  
+                <thead style="background-color:#f8bbd0;">
+                <tr>
+                 <th class="money-col"> Type</th>   
+                <th> Date</th>
+                <th> Description</th>
+                <th class="money-col">Amount</th>
+                <th class="action-col"><i class="bi bi-pencil-square"></i></th>
+                <th class="action-col"><i class="bi bi-trash"></i></th>
+                </tr>
+                </thead>
+
+                <tbody id="transactionsTable">
+       
+                </tbody>
+                <tfoot>
+                <tr>
+                <td class="text-center" colspan="2">
+                <button type="button" class="add-income-btn" onclick="addRow('income')">
+                <i class="bi bi-plus-circle"></i> Add Income
+                </button>
+                </td>
+                <td class="text-center" colspan="2">
+                <button type="button" class="add-expense-btn" onclick="addRow('expense')">
+                <i class="bi bi-plus-circle"></i> Add Expense
+                </button>
+                </td>
+                </tr>
+                </tfoot>
+            </table>
+            </div>
+        </div>
+
+    </div>
+    <div id="pagination"></div>
+    
+
+    <div class="text-center mt-4">
+    <button type="submit" class="save-btn">
+    <i class="bi bi-save"></i> Save
+    </button>
+    </div>
+
+    </form>
+
+    </div>
+
+
+{% endblock %}
