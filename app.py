@@ -29,7 +29,7 @@ def budget():
     return render_template("budget.html",month=month)
 
 if __name__=="__main__":
-    app.run(debug=True)
+    app.run()
 
 
 with app.app_context():
