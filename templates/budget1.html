@@ -1,0 +1,128 @@
+```html
+{% extends "base.html" %}
+{% block title %}My Daily Budget Planner{% endblock %}
+{% block content %}
+<div class="diary-box">
+    <form class="row g-3 mb-3 justify-content-left">
+        <div class="col-auto">
+            <input type="month"
+                   id="monthPicker"
+                   class="form-control"
+                   name="month"
+                   value="{{ request.args.get('month', month) }}">
+        </div>
+
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+
+        <div class="col-auto">
+            <a href="{{ url_for('budget.planner') }}" class="btn btn-secondary">Reset</a>
+        </div>
+    </form>
+
+    <h2 class="text-center mb-4" style="color:#c2185b;">
+        🌸 My Daily Budget Planner for {{ request.args.get('month', month) }}
+    </h2>
+
+    <!-- Summary Section -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Monthly Income</h5>
+                    <h3>MMK {{ monthly_income or 0 }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">Monthly Expenses</h5>
+                    <h3>MMK {{ monthly_expense or 0 }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">Monthly Balance</h5>
+                    <h3>MMK {{ (monthly_income or 0) - (monthly_expense or 0) }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" action="/add-transaction">
+        <div class="planner-book">
+            <div class="planner-page">
+                <h4 class="page-title">Income / Expenses</h4>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped text-center">
+                        <thead style="background-color:#f8bbd0;">
+                            <tr>
+                                <th class="money-col">Type</th>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th class="money-col">Amount</th>
+                                <th>Daily Total</th>
+                                <th class="action-col"><i class="bi bi-pencil-square"></i></th>
+                                <th class="action-col"><i class="bi bi-trash"></i></th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="transactionsTable">
+                            {% for transaction in transactions %}
+                            <tr>
+                                <td>{{ transaction.type }}</td>
+                                <td>{{ transaction.date }}</td>
+                                <td>{{ transaction.description }}</td>
+                                <td>{{ transaction.amount }}</td>
+                                <td>
+                                    MMK {{ daily_totals.get(transaction.date|string, 0) }}
+                                </td>
+                                <td><a href="#" class="btn btn-sm btn-outline-primary">Edit</a></td>
+                                <td><a href="#" class="btn btn-sm btn-outline-danger">Delete</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Monthly Totals:</strong></td>
+                                <td><strong>MMK {{ monthly_income + monthly_expense }}</strong></td>
+                                <td><strong>Balance: MMK {{ monthly_income - monthly_expense }}</strong></td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" colspan="3">
+                                    <button type="button" class="add-income-btn" onclick="addRow('income')">
+                                        <i class="bi bi-plus-circle"></i> Add Income
+                                    </button>
+                                </td>
+                                <td class="text-center" colspan="4">
+                                    <button type="button" class="add-expense-btn" onclick="addRow('expense')">
+                                        <i class="bi bi-plus-circle"></i> Add Expense
+                                    </button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="pagination"></div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="save-btn">
+                <i class="bi bi-save"></i> Save
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+```
