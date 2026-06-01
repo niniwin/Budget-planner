@@ -1,5 +1,16 @@
-﻿<div class="budget-sidebar">
-    <h5 class="sidebar-title">Budget</h5>
+﻿<button type="button" class="mobile-menu-btn" aria-label="Open budget menu" aria-expanded="false">
+    <i class="bi bi-list"></i>
+</button>
+
+<div class="mobile-menu-backdrop"></div>
+
+<nav class="budget-sidebar" aria-label="Budget navigation">
+    <div class="sidebar-header">
+        <h5 class="sidebar-title">Budget</h5>
+        <button type="button" class="mobile-menu-close" aria-label="Close budget menu">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
 
     <a href="{{ url_for('budget.planner') }}" class="sidebar-link">
         <i class="bi bi-table"></i> Transactions
@@ -12,4 +23,4 @@
     <a href="{{ url_for('budget.monthly_report') }}" class="sidebar-link">
         <i class="bi bi-bar-chart"></i> Monthly Report
     </a>
-</div>
+</nav>

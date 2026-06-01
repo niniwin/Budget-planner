@@ -1,4 +1,4 @@
-  let currentPage = 1;
+﻿  let currentPage = 1;
     
  function addRow(type) {
     const table = document.getElementById("transactionsTable");
@@ -104,18 +104,37 @@ function saveRow(row, button) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    const menuButton = document.querySelector(".mobile-menu-btn");
+    const menuClose = document.querySelector(".mobile-menu-close");
+    const menuBackdrop = document.querySelector(".mobile-menu-backdrop");
+    const sidebarLinks = document.querySelectorAll(".budget-sidebar .sidebar-link");
 
-    // ✅ 0. Set default month (ADD THIS PART HERE)
+    function openMobileMenu() {
+        document.body.classList.add("mobile-menu-open");
+        menuButton?.setAttribute("aria-expanded", "true");
+    }
+
+    function closeMobileMenu() {
+        document.body.classList.remove("mobile-menu-open");
+        menuButton?.setAttribute("aria-expanded", "false");
+    }
+
+    menuButton?.addEventListener("click", openMobileMenu);
+    menuClose?.addEventListener("click", closeMobileMenu);
+    menuBackdrop?.addEventListener("click", closeMobileMenu);
+    sidebarLinks.forEach(link => link.addEventListener("click", closeMobileMenu));
+
+    // âœ… 0. Set default month (ADD THIS PART HERE)
     const monthInput = document.getElementById("monthPicker");
     if (monthInput && !monthInput.value) {
         const now = new Date();
         monthInput.value = now.toISOString().slice(0, 7);
     }
 
-    // ✅ 1. Load data ONLY ONCE when page loads
+    // âœ… 1. Load data ONLY ONCE when page loads
     loadTransactions();
 
-    // ✅ 2. Filter form (ADD THIS — important)
+    // âœ… 2. Filter form (ADD THIS â€” important)
     const filterForm = document.querySelector(".row.g-3");
     if (filterForm) {
         filterForm.addEventListener("submit", function(e) {
@@ -124,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // ✅ 3. Handle ADD transaction form (your existing code)
+    // âœ… 3. Handle ADD transaction form (your existing code)
    const addForm = document.querySelector("form[action='/add-transaction']");
 
     if (addForm) {
@@ -207,7 +226,7 @@ function loadTransactions(page = 1) {
                    tableBody.insertAdjacentHTML("beforeend", row);
             });
 
-            renderPagination(response); // ✅ NEW
+            renderPagination(response); // âœ… NEW
         })
         .catch(error => {
             console.error("Error loading transactions:", error);
@@ -243,3 +262,4 @@ function renderPagination(data) {
 }
     
   
+
