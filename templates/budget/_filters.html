@@ -1,0 +1,27 @@
+<form method="GET" class="filter-form row g-2 mb-3 align-items-center">
+    <div class="col-auto">
+        <input type="date"
+               name="start_date"
+               class="form-control date-filter-input"
+               value="{{ request.args.get('start_date', '') }}">
+    </div>
+
+    <div class="col-auto">
+        <input type="date"
+               name="end_date"
+               class="form-control date-filter-input"
+               value="{{ request.args.get('end_date', '') }}">
+    </div>
+
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary filter-btn">
+            Filter
+        </button>
+    </div>
+
+    <div class="col-auto">
+        <a href="{{ url_for('budget.planner') }}" class="btn btn-secondary filter-btn">
+            Reset
+        </a>
+    </div>
+</form>

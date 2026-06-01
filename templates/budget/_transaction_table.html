@@ -1,0 +1,48 @@
+<table class="table table-bordered table-striped text-center transaction-table">
+    <thead style="background-color:#f8bbd0;">
+        <tr>
+            <th class="money-col">Type</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th class="money-col">Amount</th>
+            <th class="action-col"><i class="bi bi-pencil-square"></i></th>
+            <th class="action-col"><i class="bi bi-trash"></i></th>
+        </tr>
+    </thead>
+
+    <tbody id="transactionsTable">
+        {% for t in transactions %}
+        <tr>
+            <td>{{ t.type }}</td>
+            <td>{{ t.date }}</td>
+            <td>{{ t.description }}</td>
+            <td>{{ t.amount }}</td>
+            <td>
+                <a href="/edit/{{ t.id }}">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+            </td>
+            <td>
+                <a href="/delete/{{ t.id }}">
+                    <i class="bi bi-trash"></i>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <td class="text-center" colspan="2">
+                <button type="button" class="add-income-btn" onclick="addRow('income')">
+                    <i class="bi bi-plus-circle"></i> Add Income
+                </button>
+            </td>
+            <td class="text-center" colspan="2">
+                <button type="button" class="add-expense-btn" onclick="addRow('expense')">
+                    <i class="bi bi-plus-circle"></i> Add Expense
+                </button>
+            </td>
+        </tr>
+    </tfoot>
+</table>

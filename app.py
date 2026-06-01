@@ -1,5 +1,4 @@
-from flask import Flask, render_template
-import datetime
+﻿from flask import Flask
 from datetime import timedelta
 
 from config import Config
@@ -22,10 +21,6 @@ from models.transaction import Transaction
 with app.app_context():
     db.create_all()
 
-@app.route("/")
-def budget():
-    month = datetime.datetime.now().strftime("%B")
-    return render_template("budget.html", month=month)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=False)

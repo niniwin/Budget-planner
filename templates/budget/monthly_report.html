@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Monthly Report{% endblock %}
+
+{% block content %}
+<div class="budget-layout">
+    {% include "budget/_sidebar.html" %}
+
+    <main class="budget-content">
+        <h2 class="text-center mb-4" style="color:#c2185b;">
+            Monthly Budget Report
+        </h2>
+
+        <form method="GET" class="row g-3 mb-4">
+            <div class="col-auto">
+                <input type="month"
+                       name="month"
+                       class="form-control"
+                       value="{{ request.args.get('month', month) }}">
+            </div>
+
+            <div class="col-auto">
+                <input type="date"
+                       name="start_date"
+                       class="form-control"
+                       value="{{ request.args.get('start_date', '') }}">
+            </div>
+
+            <div class="col-auto">
+                <input type="date"
+                       name="end_date"
+                       class="form-control"
+                       value="{{ request.args.get('end_date', '') }}">
+            </div>
+
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">
+                    Filter Report
+                </button>
+            </div>
+        </form>
+
+        <table class="table table-bordered text-center">
+            <thead style="background-color:#f8bbd0;">
+                <tr>
+                    <th>Date</th>
+                    <th>Total Income</th>
+                    <th>Total Expense</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for row in report_data %}
+                <tr>
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.income }}</td>
+                    <td>{{ row.expense }}</td>
+                    <td>{{ row.balance }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <th>Total</th>
+                    <th>{{ total_income }}</th>
+                    <th>{{ total_expense }}</th>
+                    <th>{{ balance }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </main>
+</div>
+{% endblock %}

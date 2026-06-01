@@ -2,8 +2,8 @@ from flask import Blueprint,request,jsonify,render_template
 from models import db
 from models.transaction import Transaction
 from models.category import Category
-from datetime import datetime
-from sqlalchemy import extract
+from datetime import datetime,date
+from sqlalchemy import extract, func
 
 budget_bp=Blueprint('budget',__name__)
 
@@ -37,13 +37,21 @@ def add_transaction():
 def get_transactions():
    
     month_str = request.args.get('month')   # format: 2026-04
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
     page = max(int(request.args.get('page', 1)),1)
     per_page = 10
 
     query = Transaction.query
 
     # 📅 Filter by month
-    if month_str:
+    if start_date and end_date:
+        start = datetime.strptime(start_date, "%Y-%m-%d").date()
+        end = datetime.strptime(end_date, "%Y-%m-%d").date()
+
+        query = query.filter(Transaction.date.between(start, end))
+
+    elif month_str:
         try:
            
             year, month_num = map(int, month_str.split('-'))
@@ -61,7 +69,7 @@ def get_transactions():
         except ValueError:
             return jsonify({"error": "Invalid month format. Use YYYY-MM"}), 400
     # 📄 Pagination
-    pagination = query.order_by(Transaction.date.desc())\
+    pagination = query.order_by(Transaction.date.asc())\
                       .paginate(page=page, per_page=per_page, error_out=False)
 
     result = []
@@ -79,12 +87,62 @@ def get_transactions():
         "total_pages": pagination.pages,
         "current_page": page
     })
-
+@budget_bp.route("/")
 @budget_bp.route("/planner")
 def planner():
-    current_month = datetime.now().strftime("%B")
-    return render_template("budget.html", month=current_month)
+    selected_month = request.args.get("month")
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
 
+    if not selected_month:
+        selected_month = date.today().strftime("%Y-%m")
+
+    query = Transaction.query
+
+    if start_date and end_date:
+        query = query.filter(Transaction.date.between(start_date, end_date))
+
+    elif selected_month:
+        year, month_num = selected_month.split("-")
+        query = query.filter(
+            func.extract("year", Transaction.date) == int(year),
+            func.extract("month", Transaction.date) == int(month_num)
+        )
+
+    transactions = query.order_by(Transaction.date.asc()).all()
+
+    total_income = sum(t.amount for t in transactions if t.type == "income")
+    total_expense = sum(t.amount for t in transactions if t.type == "expense")
+    balance = total_income - total_expense
+
+    daily_summary = {}
+
+    for t in transactions:
+        day = t.date.strftime("%Y-%m-%d")
+
+        if day not in daily_summary:
+            daily_summary[day] = {
+                "income": 0,
+                "expense": 0
+            }
+
+        if t.type == "income":
+            daily_summary[day]["income"] += t.amount
+        else:
+            daily_summary[day]["expense"] += t.amount
+
+    month_display = datetime.strptime(selected_month, "%Y-%m").strftime("%B")
+
+    return render_template(
+        "budget.html",
+        transactions=transactions,
+        total_income=total_income,
+        total_expense=total_expense,
+        balance=balance,
+        daily_summary=daily_summary,
+        month=selected_month,
+        month_display=month_display
+    )
 @budget_bp.route('/update/<int:id>', methods=['PUT'])
 def update_transaction(id):
     data = request.get_json()
@@ -108,3 +166,102 @@ def delete_transaction(id):
     db.session.commit()
 
     return jsonify({"success": True}), 200
+
+def get_monthly_report(month=None, start_date=None, end_date=None):
+    query = Transaction.query
+
+    if month:
+        query = query.filter(func.strftime("%Y-%m", Transaction.date) == month)
+
+    if start_date:
+        query = query.filter(Transaction.date >= start_date)
+
+    if end_date:
+        query = query.filter(Transaction.date <= end_date)
+
+    transactions = query.order_by(Transaction.date.asc()).all()
+
+    report = {}
+
+    for t in transactions:
+        day = t.date.strftime("%Y-%m-%d")
+
+        if day not in report:
+            report[day] = {
+                "date": day,
+                "income": 0,
+                "expense": 0,
+                "balance": 0
+            }
+
+        if t.type == "income":
+            report[day]["income"] += t.amount
+        elif t.type == "expense":
+            report[day]["expense"] += t.amount
+
+        report[day]["balance"] = (
+            report[day]["income"] - report[day]["expense"]
+        )
+
+    return list(report.values())
+
+@budget_bp.route("/budget/monthly-report")
+def monthly_report():
+    month = request.args.get("month")
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+
+    if not month:
+        month=date.today().strftime("%Y-%m")
+
+    report_data = get_monthly_report(
+        month=month,
+        start_date=start_date,
+        end_date=end_date
+    )
+
+    total_income = sum(row["income"] for row in report_data)
+    total_expense = sum(row["expense"] for row in report_data)
+    balance = total_income - total_expense
+
+    return render_template(
+        "budget/monthly_report.html",
+        report_data=report_data,
+        total_income=total_income,
+        total_expense=total_expense,
+        balance=balance,
+        month=month
+    )
+
+@budget_bp.route("/budget/daily-summary")
+def daily_summary():
+    selected_month = request.args.get("month")
+
+    if not selected_month:
+        selected_month = date.today().strftime("%Y-%m")
+
+    year, month_num = selected_month.split("-")
+
+    transactions = Transaction.query.filter(
+        func.extract("year", Transaction.date) == int(year),
+        func.extract("month", Transaction.date) == int(month_num)
+    ).order_by(Transaction.date.asc()).all()
+
+    daily_summary = {}
+
+    for t in transactions:
+        day = t.date.strftime("%Y-%m-%d")
+
+        if day not in daily_summary:
+            daily_summary[day] = {"income": 0, "expense": 0}
+
+        if t.type == "income":
+            daily_summary[day]["income"] += t.amount
+        else:
+            daily_summary[day]["expense"] += t.amount
+
+    return render_template(
+        "budget/daily_summary.html",
+        daily_summary=daily_summary,
+        month=selected_month
+    )

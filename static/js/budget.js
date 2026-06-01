@@ -160,14 +160,16 @@ function loadTransactions(page = 1) {
        tableBody.innerHTML = "";
  
 
-    const month = document.getElementById("monthPicker")?.value || "";
-     console.log("Selected month:", month);
+    const startDate = document.querySelector("input[name='start_date']")?.value || "";
+    const endDate = document.querySelector("input[name='end_date']")?.value || "";
 
     let url = `/transactions?page=${page}`;
-    if (month) {
-        url += `&month=${month}`;
+
+    if (startDate && endDate) {
+    url += `&start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
     }
-     console.log("Fetching URL:", url);
+
+    console.log("Fetching URL:", url);
 
     fetch(url)
         .then(res => res.json())

@@ -10,13 +10,82 @@ font-size:32px;
 .diary-box{
     background:#fff0f5;
     border-radius:15px;
-    padding:30px;
+    padding:10px;
     box-shadow:0px 5px 15px rgba(0,0,0,0.1);
 }
 
 /* pink header */
 thead{
     background:#f8bbd0;
+}
+.transaction-table {
+ 
+    min-width: 720px;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: visible;
+    }
+
+    .transaction-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+        font-size: 11px;
+    }
+
+    .transaction-table th,
+    .transaction-table td {
+        padding: 4px 3px;
+        word-break: break-word;
+        vertical-align: middle;
+    }
+
+    .transaction-table input,
+    .transaction-table select {
+        width: 100%;
+        min-width: 0;
+        font-size: 11px;
+        padding: 4px 2px;
+    }
+
+    .transaction-table th:nth-child(1),
+    .transaction-table td:nth-child(1) {
+        width: 17%;
+    }
+
+    .transaction-table th:nth-child(2),
+    .transaction-table td:nth-child(2) {
+        width: 22%;
+    }
+
+    .transaction-table th:nth-child(3),
+    .transaction-table td:nth-child(3) {
+        width: 25%;
+    }
+
+    .transaction-table th:nth-child(4),
+    .transaction-table td:nth-child(4) {
+        width: 18%;
+    }
+
+    .transaction-table th:nth-child(5),
+    .transaction-table td:nth-child(5),
+    .transaction-table th:nth-child(6),
+    .transaction-table td:nth-child(6) {
+        width: 9%;
+    }
+
+    .transaction-table .update-btn,
+    .transaction-table .delete-btn {
+        font-size: 13px;
+        padding: 2px;
+    }
 }
 
 
@@ -57,7 +126,7 @@ width:100%;
 
 }
 table{
-    table-layout:fixed;
+    
     width:100%;
 }
 th, td{
@@ -189,4 +258,151 @@ transform:scale(0.97);
 .save-btn{
 position:sticky;
 bottom:20px;
+}
+
+.budget-layout {
+    display: flex;
+    min-height: 80vh;
+    gap: 24px;
+}
+
+.budget-sidebar {
+    width: 220px;
+    background: #fff0f6;
+    border-right: 1px solid #f3b6ce;
+    padding: 20px;
+
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+    height: fit-content;
+}
+
+.sidebar-title {
+    color: #c2185b;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.sidebar-link {
+    display: block;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    color: #444;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.sidebar-link:hover {
+    background: #f8bbd0;
+    color: #000;
+}
+
+.budget-content {
+    flex: 1;
+    padding: 20px;
+}
+@media (max-width: 768px) {
+    .budget-layout {
+        display: block;
+    }
+
+    .budget-sidebar {
+        display: none;
+    }
+
+    .budget-content {
+        padding: 10px;
+        width: 100%;
+    }
+
+    .diary-box {
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .planner-book {
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .planner-page {
+        padding: 10px;
+        min-width: 100%;
+    }
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .transaction-table {
+        min-width: 720px;
+        font-size: 14px;
+    }
+
+    .transaction-table th,
+    .transaction-table td {
+        padding: 8px;
+        vertical-align: middle;
+    }
+
+    .transaction-table input,
+    .transaction-table select {
+        min-width: 110px;
+        font-size: 14px;
+    }
+
+    .action-col {
+        width: 50px;
+    }
+
+    .add-income-btn,
+    .add-expense-btn,
+    .save-btn {
+        padding: 8px 14px;
+        font-size: 14px;
+        border-radius: 18px;
+    }
+}
+.date-filter-input {
+    width: 150px;
+}
+
+@media (max-width: 992px) {
+    .filter-form {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 5px;
+    }
+
+    .filter-form .col-auto {
+        padding: 0;
+    }
+
+    .date-filter-input {
+        width: 118px;
+        font-size: 12px;
+        padding: 6px 4px;
+    }
+
+    .filter-btn {
+        font-size: 12px;
+        padding: 6px 8px;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 576px) {
+    .date-filter-input {
+        width: 105px;
+        font-size: 11px;
+        padding: 6px 3px;
+    }
+
+    .filter-btn {
+        font-size: 11px;
+        padding: 6px 6px;
+    }
 }
