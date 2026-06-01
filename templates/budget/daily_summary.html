@@ -1,0 +1,75 @@
+﻿{% extends "base.html" %}
+{% block title %}Daily Summary{% endblock %}
+
+{% block content %}
+<div class="budget-layout">
+    {% include "budget/_sidebar.html" %}
+
+    <main class="budget-content">
+        <div class="diary-box">
+            <h2 class="text-center mb-4" style="color:#c2185b;">
+                Daily Summary for {{ period_display }}
+            </h2>
+
+            <form method="GET" class="filter-form row g-2 mb-3 align-items-center">
+                <div class="col-auto">
+                    <input type="date"
+                           name="start_date"
+                           class="form-control date-filter-input"
+                           value="{{ request.args.get('start_date', '') }}">
+                </div>
+
+                <div class="col-auto">
+                    <input type="date"
+                           name="end_date"
+                           class="form-control date-filter-input"
+                           value="{{ request.args.get('end_date', '') }}">
+                </div>
+
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary filter-btn">Filter</button>
+                </div>
+
+                <div class="col-auto">
+                    <a href="{{ url_for('budget.daily_summary') }}" class="btn btn-secondary filter-btn">Reset</a>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped text-center transaction-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Income</th>
+                            <th>Expense</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for day, data in daily_summary.items() %}
+                        <tr>
+                            <td>{{ day }}</td>
+                            <td>{{ "%.2f"|format(data.income) }}</td>
+                            <td>{{ "%.2f"|format(data.expense) }}</td>
+                            <td>{{ "%.2f"|format(data.balance) }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4">No transactions found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <th>{{ "%.2f"|format(total_income) }}</th>
+                            <th>{{ "%.2f"|format(total_expense) }}</th>
+                            <th>{{ "%.2f"|format(balance) }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

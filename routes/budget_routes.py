@@ -1,4 +1,4 @@
-from flask import Blueprint,request,jsonify,render_template
+﻿from flask import Blueprint,request,jsonify,render_template
 from models import db
 from models.transaction import Transaction
 from models.category import Category
@@ -44,7 +44,7 @@ def get_transactions():
 
     query = Transaction.query
 
-    # 📅 Filter by month
+    # ðŸ“… Filter by month
     if start_date and end_date:
         start = datetime.strptime(start_date, "%Y-%m-%d").date()
         end = datetime.strptime(end_date, "%Y-%m-%d").date()
@@ -68,7 +68,7 @@ def get_transactions():
             )
         except ValueError:
             return jsonify({"error": "Invalid month format. Use YYYY-MM"}), 400
-    # 📄 Pagination
+    # ðŸ“„ Pagination
     pagination = query.order_by(Transaction.date.asc())\
                       .paginate(page=page, per_page=per_page, error_out=False)
 
@@ -236,16 +236,28 @@ def monthly_report():
 @budget_bp.route("/budget/daily-summary")
 def daily_summary():
     selected_month = request.args.get("month")
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
 
     if not selected_month:
         selected_month = date.today().strftime("%Y-%m")
 
-    year, month_num = selected_month.split("-")
+    query = Transaction.query
 
-    transactions = Transaction.query.filter(
-        func.extract("year", Transaction.date) == int(year),
-        func.extract("month", Transaction.date) == int(month_num)
-    ).order_by(Transaction.date.asc()).all()
+    if start_date and end_date:
+        start = datetime.strptime(start_date, "%Y-%m-%d").date()
+        end = datetime.strptime(end_date, "%Y-%m-%d").date()
+        query = query.filter(Transaction.date.between(start, end))
+        period_display = f"{start.strftime('%b %d, %Y')} - {end.strftime('%b %d, %Y')}"
+    else:
+        year, month_num = selected_month.split("-")
+        query = query.filter(
+            func.extract("year", Transaction.date) == int(year),
+            func.extract("month", Transaction.date) == int(month_num)
+        )
+        period_display = datetime.strptime(selected_month, "%Y-%m").strftime("%B")
+
+    transactions = query.order_by(Transaction.date.asc()).all()
 
     daily_summary = {}
 
@@ -253,15 +265,25 @@ def daily_summary():
         day = t.date.strftime("%Y-%m-%d")
 
         if day not in daily_summary:
-            daily_summary[day] = {"income": 0, "expense": 0}
+            daily_summary[day] = {"income": 0, "expense": 0, "balance": 0}
 
         if t.type == "income":
             daily_summary[day]["income"] += t.amount
         else:
             daily_summary[day]["expense"] += t.amount
 
+        daily_summary[day]["balance"] = daily_summary[day]["income"] - daily_summary[day]["expense"]
+
+    total_income = sum(day["income"] for day in daily_summary.values())
+    total_expense = sum(day["expense"] for day in daily_summary.values())
+    balance = total_income - total_expense
+
     return render_template(
         "budget/daily_summary.html",
         daily_summary=daily_summary,
-        month=selected_month
+        total_income=total_income,
+        total_expense=total_expense,
+        balance=balance,
+        month=selected_month,
+        period_display=period_display
     )

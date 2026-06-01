@@ -1,19 +1,15 @@
-<div class="budget-sidebar">
+﻿<div class="budget-sidebar">
     <h5 class="sidebar-title">Budget</h5>
 
-    <a href="{{ url_for('budget.planner') }}"
-       class="sidebar-link">
+    <a href="{{ url_for('budget.planner') }}" class="sidebar-link">
         <i class="bi bi-table"></i> Transactions
     </a>
 
-    <!-- <a href="{{ url_for('budget.daily_summary') }}"> -->
-     <a href="#" class="sidebar-link">
-     
+    <a href="{{ url_for('budget.daily_summary') }}" class="sidebar-link">
         <i class="bi bi-calendar-day"></i> Daily Summary
     </a>
 
-    <!-- <a href="{{ url_for('budget.monthly_report') }}" -->
-      <a href="#" class="sidebar-link">
+    <a href="{{ url_for('budget.monthly_report') }}" class="sidebar-link">
         <i class="bi bi-bar-chart"></i> Monthly Report
     </a>
 </div>
