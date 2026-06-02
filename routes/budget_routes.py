@@ -1,13 +1,39 @@
-﻿from flask import Blueprint,request,jsonify,render_template
+﻿from flask import Blueprint, Response, request, jsonify, render_template
 from models import db
 from models.transaction import Transaction
 from models.category import Category
 from datetime import datetime,date
 from sqlalchemy import extract, func
+import csv
+from io import StringIO
 
 budget_bp=Blueprint('budget',__name__)
 
 
+@budget_bp.route('/backup/transactions.csv')
+def backup_transactions():
+    transactions = Transaction.query.order_by(Transaction.date.asc()).all()
+
+    output = StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['id', 'type', 'date', 'description', 'amount'])
+
+    for t in transactions:
+        writer.writerow([
+            t.id,
+            t.type,
+            t.date.strftime('%Y-%m-%d') if t.date else '',
+            t.description or '',
+            t.amount
+        ])
+
+    filename = f"transactions-backup-{date.today().strftime('%Y-%m-%d')}.csv"
+
+    return Response(
+        output.getvalue(),
+        mimetype='text/csv',
+        headers={'Content-Disposition': f'attachment; filename={filename}'}
+    )
 @budget_bp.route('/add-transaction',methods=['POST'])
 def add_transaction():
     print(request.form)
@@ -287,3 +313,4 @@ def daily_summary():
         month=selected_month,
         period_display=period_display
     )
+

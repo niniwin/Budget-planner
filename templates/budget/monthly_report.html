@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% block title %}Monthly Report{% endblock %}
 
 {% block content %}
@@ -6,7 +6,7 @@
     {% include "budget/_sidebar.html" %}
 
     <main class="budget-content">
-        <h2 class="text-center mb-4" style="color:#c2185b;">
+        <h2 class="page-heading text-center mb-4">
             Monthly Budget Report
         </h2>
 
@@ -40,7 +40,7 @@
         </form>
 
         <table class="table table-bordered text-center">
-            <thead style="background-color:#f8bbd0;">
+            <thead>
                 <tr>
                     <th>Date</th>
                     <th>Total Income</th>
@@ -72,3 +72,4 @@
     </main>
 </div>
 {% endblock %}
+

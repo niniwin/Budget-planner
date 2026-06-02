@@ -7,7 +7,7 @@
 
     <main class="budget-content">
         <div class="diary-box">
-            <h2 class="text-center mb-4" style="color:#c2185b;">
+            <h2 class="page-heading text-center mb-4">
                 Daily Summary for {{ period_display }}
             </h2>
 
@@ -68,8 +68,14 @@
                         </tr>
                     </tfoot>
                 </table>
+                <div class="text-center mt-4">
+                <button type="button" class="save-btn" onclick="downloadDailySummary()">
+                    <i class="bi bi-save"></i> Save
+                </button>
+</div>
             </div>
         </div>
     </main>
 </div>
 {% endblock %}
+

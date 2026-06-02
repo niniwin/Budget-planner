@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% block title %}My Daily Budget Planner{% endblock %}
 
 {% block content %}
@@ -8,8 +8,8 @@
 
     <main class="budget-content">
         <div class="diary-box">
-             <h2 class="text-center mb-4" style="color:#c2185b;">
-                🌸 My Daily Budget Planner for {{ month_display }}
+             <h2 class="page-heading text-center mb-4">
+                My Daily Budget Planner for {{ month_display }}
             </h2>
 
             {% include "budget/_filters.html" %}

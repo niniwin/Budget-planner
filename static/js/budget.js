@@ -233,6 +233,31 @@ function loadTransactions(page = 1) {
         });
 }
 
+function downloadDailySummary() {
+    const rows = [];
+    const table = document.querySelector(".transaction-table");
+
+    if (!table) return;
+
+    table.querySelectorAll("tr").forEach(row => {
+        const cells = Array.from(row.querySelectorAll("th, td"))
+            .map(cell => `"${cell.innerText.trim()}"`);
+
+        rows.push(cells.join(","));
+    });
+
+    const csv = rows.join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "daily-summary.csv";
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
+
 function renderPagination(data) {
     const container = document.getElementById("pagination");
     if (!container) return;
