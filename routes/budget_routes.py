@@ -119,6 +119,8 @@ def planner():
     selected_month = request.args.get("month")
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
+    page = max(int(request.args.get("page", 1)), 1)
+    per_page = 10
 
     if not selected_month:
         selected_month = date.today().strftime("%Y-%m")
@@ -126,7 +128,9 @@ def planner():
     query = Transaction.query
 
     if start_date and end_date:
-        query = query.filter(Transaction.date.between(start_date, end_date))
+        start = datetime.strptime(start_date, "%Y-%m-%d").date()
+        end = datetime.strptime(end_date, "%Y-%m-%d").date()
+        query = query.filter(Transaction.date.between(start, end))
 
     elif selected_month:
         year, month_num = selected_month.split("-")
@@ -135,15 +139,21 @@ def planner():
             func.extract("month", Transaction.date) == int(month_num)
         )
 
-    transactions = query.order_by(Transaction.date.asc()).all()
+    pagination = query.order_by(Transaction.date.asc()).paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+    transactions = pagination.items
 
-    total_income = sum(t.amount for t in transactions if t.type == "income")
-    total_expense = sum(t.amount for t in transactions if t.type == "expense")
+    summary_transactions = query.all()
+    total_income = sum(t.amount for t in summary_transactions if t.type == "income")
+    total_expense = sum(t.amount for t in summary_transactions if t.type == "expense")
     balance = total_income - total_expense
 
     daily_summary = {}
 
-    for t in transactions:
+    for t in summary_transactions:
         day = t.date.strftime("%Y-%m-%d")
 
         if day not in daily_summary:
@@ -167,8 +177,10 @@ def planner():
         balance=balance,
         daily_summary=daily_summary,
         month=selected_month,
-        month_display=month_display
+        month_display=month_display,
+        pagination=pagination
     )
+
 @budget_bp.route('/update/<int:id>', methods=['PUT'])
 def update_transaction(id):
     data = request.get_json()
@@ -264,6 +276,8 @@ def daily_summary():
     selected_month = request.args.get("month")
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
+    page = max(int(request.args.get("page", 1)), 1)
+    per_page = 10
 
     if not selected_month:
         selected_month = date.today().strftime("%Y-%m")
@@ -313,4 +327,7 @@ def daily_summary():
         month=selected_month,
         period_display=period_display
     )
+
+
+
 

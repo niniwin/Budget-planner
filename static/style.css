@@ -552,3 +552,16 @@ bottom:20px;
 
 
 
+
+.pagination-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.pagination-status {
+    font-weight: 600;
+    color: #555;
+}
