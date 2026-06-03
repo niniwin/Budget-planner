@@ -12,20 +12,31 @@
 
     <tbody id="transactionsTable">
         {% for t in transactions %}
-        <tr>
-            <td>{{ t.type }}</td>
-            <td>{{ t.date }}</td>
-            <td>{{ t.description }}</td>
-            <td>{{ t.amount }}</td>
+        <tr data-id="{{ t.id }}">
             <td>
-                <a href="/edit/{{ t.id }}">
-                    <i class="bi bi-pencil-square"></i>
-                </a>
+                <select class="form-control" disabled>
+                    <option value="income" {% if t.type == "income" %}selected{% endif %}>Income</option>
+                    <option value="expense" {% if t.type == "expense" %}selected{% endif %}>Expense</option>
+                </select>
             </td>
             <td>
-                <a href="/delete/{{ t.id }}">
-                    <i class="bi bi-trash"></i>
-                </a>
+                <input type="date" value="{{ t.date }}" class="form-control" disabled>
+            </td>
+            <td>
+                <input type="text" value="{{ t.description }}" class="form-control" disabled>
+            </td>
+            <td>
+                <input type="number" value="{{ t.amount }}" class="form-control" step="0.01" disabled>
+            </td>
+            <td>
+                <button type="button" class="update-btn" onclick="editRow(this)">
+                    <i class="bi bi-pencil-square"></i>
+                </button>
+            </td>
+            <td>
+                <button type="button" class="delete-btn" onclick="deleteRow(this)">
+                    <i class="bi bi-x-circle"></i>
+                </button>
             </td>
         </tr>
         {% endfor %}

@@ -50,7 +50,7 @@
     fetch(`/delete/${id}`, { method: 'DELETE' })
         .then(res => {
             if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
-            loadTransactions(currentPage);
+            row.remove();
         })
         .catch(err => {
             console.error(err);
@@ -123,27 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
     menuClose?.addEventListener("click", closeMobileMenu);
     menuBackdrop?.addEventListener("click", closeMobileMenu);
     sidebarLinks.forEach(link => link.addEventListener("click", closeMobileMenu));
-
-    // âœ… 0. Set default month (ADD THIS PART HERE)
-    const monthInput = document.getElementById("monthPicker");
-    if (monthInput && !monthInput.value) {
-        const now = new Date();
-        monthInput.value = now.toISOString().slice(0, 7);
-    }
-
-    // âœ… 1. Load data ONLY ONCE when page loads
-    loadTransactions();
-
-    // âœ… 2. Filter form (ADD THIS â€” important)
-    const filterForm = document.querySelector(".row.g-3");
-    if (filterForm) {
-        filterForm.addEventListener("submit", function(e) {
-            e.preventDefault();
-            loadTransactions(1); // reset to page 1 when filtering
-        });
-    }
-
-    // âœ… 3. Handle ADD transaction form (your existing code)
+    // Handle ADD transaction form
    const addForm = document.querySelector("form[action='/add-transaction']");
 
     if (addForm) {
@@ -159,8 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
             body: formData
         })
         .then(() => {
-            this.reset();
-            loadTransactions();
+            window.location.reload();
         })
         .finally(() => {
             btn.disabled = false;
@@ -287,4 +266,5 @@ function renderPagination(data) {
 }
     
   
+
 
