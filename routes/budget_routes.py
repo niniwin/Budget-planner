@@ -66,11 +66,11 @@ def get_transactions():
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
     page = max(int(request.args.get('page', 1)),1)
-    per_page = 10
+    per_page = 25
 
     query = Transaction.query
 
-    # ðŸ“… Filter by month
+    # Filter by month
     if start_date and end_date:
         start = datetime.strptime(start_date, "%Y-%m-%d").date()
         end = datetime.strptime(end_date, "%Y-%m-%d").date()
@@ -94,7 +94,7 @@ def get_transactions():
             )
         except ValueError:
             return jsonify({"error": "Invalid month format. Use YYYY-MM"}), 400
-    # ðŸ“„ Pagination
+    # Pagination
     pagination = query.order_by(Transaction.date.asc())\
                       .paginate(page=page, per_page=per_page, error_out=False)
 
@@ -120,7 +120,7 @@ def planner():
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
     page = max(int(request.args.get("page", 1)), 1)
-    per_page = 10
+    per_page = 25
 
     if not selected_month:
         selected_month = date.today().strftime("%Y-%m")
@@ -277,7 +277,7 @@ def daily_summary():
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
     page = max(int(request.args.get("page", 1)), 1)
-    per_page = 10
+    per_page = 25
 
     if not selected_month:
         selected_month = date.today().strftime("%Y-%m")

@@ -205,7 +205,7 @@ function loadTransactions(page = 1) {
                    tableBody.insertAdjacentHTML("beforeend", row);
             });
 
-            renderPagination(response); // âœ… NEW
+            renderPagination(response); // NEW
         })
         .catch(error => {
             console.error("Error loading transactions:", error);
