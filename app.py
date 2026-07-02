@@ -4,6 +4,7 @@ from datetime import timedelta
 from config import Config
 from models import db
 from routes.budget_routes import budget_bp
+from routes.report_routes import report_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -12,6 +13,7 @@ app.permanent_session_lifetime = timedelta(minutes=5)
 
 db.init_app(app)
 app.register_blueprint(budget_bp)
+app.register_blueprint(report_bp)
 
 # Import models so SQLAlchemy registers them
 from models.user import User

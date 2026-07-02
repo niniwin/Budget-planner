@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Monthly Report{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid budget-dashboard py-3">
+
+    <div class="budget-layout">
+
+        {% include "budget/_sidebar.html" %}
+
+        <main class="budget-content">
+
+            <!-- PAGE TITLE -->
+            <h2 class="text-center mb-4 fw-bold">
+                📊 Monthly Budget Report
+            </h2>
+
+            <!-- SUMMARY CARDS -->
+            <div class="row g-3 mb-4">
+
+                <div class="col-12 col-md-4">
+                    <div class="card shadow-sm border-0 text-center p-3 summary-card income">
+                        <h6>Income</h6>
+                        <h3 class="text-success">{{ "%.2f"|format(total_income) }}</h3>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="card shadow-sm border-0 text-center p-3 summary-card expense">
+                        <h6>Expense</h6>
+                        <h3 class="text-danger">{{ "%.2f"|format(total_expense) }}</h3>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="card shadow-sm border-0 text-center p-3 summary-card balance">
+                        <h6>Balance</h6>
+                        <h3 class="text-primary">{{ "%.2f"|format(balance) }}</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Chart -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-2 p-md-3">
+                    {{ chart|safe }}
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover text-center align-middle">
+
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Income</th>
+                                    <th>Expense</th>
+                                    <th>Balance</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for row in report_data %}
+                                <tr>
+                                    <td>{{ row.date }}</td>
+                                    <td class="text-success">{{ "%.2f"|format(row.income) }}</td>
+                                    <td class="text-danger">{{ "%.2f"|format(row.expense) }}</td>
+                                    <td class="text-primary">{{ "%.2f"|format(row.balance) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+{% endblock %}

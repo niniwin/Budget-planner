@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% block title %}Daily Summary{% endblock %}
 
 {% block content %}
@@ -49,22 +49,22 @@
                         {% for day, data in daily_summary.items() %}
                         <tr>
                             <td>{{ day }}</td>
-                            <td>{{ "%.2f"|format(data.income) }}</td>
-                            <td>{{ "%.2f"|format(data.expense) }}</td>
-                            <td>{{ "%.2f"|format(data.balance) }}</td>
+                            <td>{{ "%.2f"|format(data.income or 0) }}</td>
+                            <td>{{ "%.2f"|format(data.expense or 0) }}</td>
+                            <td>{{ "%.2f"|format(data.balance or 0) }}</td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="4">No transactions found.</td>
+                            <td colspan="4">No transactions found for the selected period.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <th>{{ "%.2f"|format(total_income) }}</th>
-                            <th>{{ "%.2f"|format(total_expense) }}</th>
-                            <th>{{ "%.2f"|format(balance) }}</th>
+                            <th>{{ "%.2f"|format(total_income or 0) }}</th>
+                            <th>{{ "%.2f"|format(total_expense or 0) }}</th>
+                            <th>{{ "%.2f"|format(balance or 0) }}</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -72,10 +72,9 @@
                 <button type="button" class="save-btn" onclick="downloadDailySummary()">
                     <i class="bi bi-save"></i> Save
                 </button>
-</div>
+                </div>
             </div>
         </div>
     </main>
 </div>
 {% endblock %}
-

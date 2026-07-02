@@ -1,5 +1,26 @@
 ﻿  let currentPage = 1;
     
+const editIcon = `
+    <svg class="action-icon" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M15.502 1.94a.5.5 0 0 1 0 .706l-1.043 1.043-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293z"/>
+        <path d="M13.752 4.396l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.815z"/>
+        <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+    </svg>
+`;
+
+const deleteIcon = `
+    <svg class="action-icon" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+    </svg>
+`;
+
+const saveIcon = `
+    <svg class="action-icon" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2.5L13.5 1zm11 1.5V6H3V2h9.5zM3 14v-5h10v5z"/>
+    </svg>
+`;
+
  function addRow(type) {
     const table = document.getElementById("transactionsTable");
 
@@ -22,12 +43,12 @@
             </td>
             <td class="text-center">
                 <button type="button" class="update-btn" disabled>
-                    <i class="bi bi-pencil-square"></i>
+                    ${editIcon}
                 </button>
             </td>
             <td class="text-center">
                 <button type="button" class="delete-btn" onclick="this.closest('tr').remove()">
-                    <i class="bi bi-x-circle"></i>
+                    ${deleteIcon}
                 </button>
             </td>
         </tr>
@@ -64,7 +85,7 @@ function editRow(button){
     inputs.forEach(input => input.disabled = false);
 
     // change icon
-    button.innerHTML = '<i class="bi bi-save"></i>';
+    button.innerHTML = saveIcon;
 
     // change behavior
     button.onclick = function () {
@@ -94,7 +115,7 @@ function saveRow(row, button) {
         inputs.forEach(input => input.disabled = true);
 
         // change back to edit icon
-        button.innerHTML = '<i class="bi bi-pencil-square"></i>';
+        button.innerHTML = editIcon;
 
         // restore edit behavior
         button.onclick = function () {
@@ -190,12 +211,12 @@ function loadTransactions(page = 1) {
                     <td><input type="number" value="${t.amount}" class="form-control" disabled></td>
                     <td>       
                             <button type="button" class="update-btn" onclick="editRow(this)">
-                            <i class="bi bi-pencil-square"></i>
+                            ${editIcon}
                             </button>
                         </td>
                         <td class="text-center">
                             <button type="button" class="delete-btn" onclick="deleteRow(this)">
-                            <i class="bi bi-x-circle"></i>
+                            ${deleteIcon}
                             </button>
                         </td>
                     </tr>

@@ -7,7 +7,7 @@ class Transaction(db.Model):
     __tablename__='transactions'
 
     id=db.Column(db.Integer,primary_key=True)
-    amount = db.Column(db.Float,nullable=False)
+    amount = db.Column(db.Numeric(12,2),nullable=False)
     description= db.Column(db.Text)
     date=db.Column(db.Date, default=func.now())
     user_id=db.Column(db.Integer,db.ForeignKey('user.id'))

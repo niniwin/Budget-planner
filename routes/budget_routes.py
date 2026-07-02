@@ -66,7 +66,7 @@ def get_transactions():
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
     page = max(int(request.args.get('page', 1)),1)
-    per_page = 25
+    per_page = 30
 
     query = Transaction.query
 
@@ -120,7 +120,7 @@ def planner():
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
     page = max(int(request.args.get("page", 1)), 1)
-    per_page = 25
+    per_page = 30
 
     if not selected_month:
         selected_month = date.today().strftime("%Y-%m")
@@ -205,7 +205,7 @@ def delete_transaction(id):
 
     return jsonify({"success": True}), 200
 
-def get_monthly_report(month=None, start_date=None, end_date=None):
+""" def get_monthly_report(month=None, start_date=None, end_date=None):
     query = Transaction.query
 
     if month:
@@ -269,7 +269,7 @@ def monthly_report():
         total_expense=total_expense,
         balance=balance,
         month=month
-    )
+    ) """
 
 @budget_bp.route("/budget/daily-summary")
 def daily_summary():
@@ -277,7 +277,7 @@ def daily_summary():
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
     page = max(int(request.args.get("page", 1)), 1)
-    per_page = 25
+    per_page = 30
 
     if not selected_month:
         selected_month = date.today().strftime("%Y-%m")
