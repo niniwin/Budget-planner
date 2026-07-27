@@ -82,13 +82,14 @@ def monthly_report():
         texttemplate='%{text:.2f}',
         textposition='outside'
     )
+    max_value=max(incomes + expenses) if incomes or expenses else 0
 
     fig.update_layout(
         title={
             'text': '📊 Monthly Income vs Expense Report',
             'x': 0.5,
             'xanchor': 'center',
-            'font': dict(size=24)
+            'font': {"size":24}
         },
         xaxis_title='Month',
         yaxis_title='Amount',
@@ -96,13 +97,26 @@ def monthly_report():
         barmode='group',
         bargap=0.25,
         hovermode='x unified',
-        height=550
+        height=550,
+        autosize=True,        
+        legend=dict(
+        itemclick=False,
+        itemdoubleclick=False
+    ),
+    uirevision="monthly_report"
     )
 
     fig.update_xaxes(showgrid=False)
-    fig.update_yaxes(showgrid=True, gridcolor='lightgray')
+    fig.update_yaxes(showgrid=True, 
+                     gridcolor='lightgray',
+                     range=[0,max_value*1.15],
+                     autorange=False                    
+                     )
 
-    chart = fig.to_html(full_html=False)
+    chart = fig.to_html(
+        full_html=False,
+        config={"responsive": True}
+        )
 
     # ----------------------------
     # 4. Table data (same as chart)

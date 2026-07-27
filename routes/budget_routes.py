@@ -1,7 +1,8 @@
-﻿from flask import Blueprint, Response, request, jsonify, render_template
+﻿from flask import Blueprint, Response, request, jsonify, render_template,redirect,url_for
 from models import db
 from models.transaction import Transaction
 from models.category import Category
+from models.note import Note
 from datetime import datetime,date
 from sqlalchemy import extract, func
 import csv
@@ -150,24 +151,8 @@ def planner():
     total_income = sum(t.amount for t in summary_transactions if t.type == "income")
     total_expense = sum(t.amount for t in summary_transactions if t.type == "expense")
     balance = total_income - total_expense
-
-    daily_summary = {}
-
-    for t in summary_transactions:
-        day = t.date.strftime("%Y-%m-%d")
-
-        if day not in daily_summary:
-            daily_summary[day] = {
-                "income": 0,
-                "expense": 0
-            }
-
-        if t.type == "income":
-            daily_summary[day]["income"] += t.amount
-        else:
-            daily_summary[day]["expense"] += t.amount
-
     month_display = datetime.strptime(selected_month, "%Y-%m").strftime("%B")
+  
 
     return render_template(
         "budget.html",
@@ -175,10 +160,10 @@ def planner():
         total_income=total_income,
         total_expense=total_expense,
         balance=balance,
-        daily_summary=daily_summary,
         month=selected_month,
         month_display=month_display,
-        pagination=pagination
+        pagination=pagination,
+    
     )
 
 @budget_bp.route('/update/<int:id>', methods=['PUT'])
@@ -205,71 +190,7 @@ def delete_transaction(id):
 
     return jsonify({"success": True}), 200
 
-""" def get_monthly_report(month=None, start_date=None, end_date=None):
-    query = Transaction.query
 
-    if month:
-        query = query.filter(func.strftime("%Y-%m", Transaction.date) == month)
-
-    if start_date:
-        query = query.filter(Transaction.date >= start_date)
-
-    if end_date:
-        query = query.filter(Transaction.date <= end_date)
-
-    transactions = query.order_by(Transaction.date.asc()).all()
-
-    report = {}
-
-    for t in transactions:
-        day = t.date.strftime("%Y-%m-%d")
-
-        if day not in report:
-            report[day] = {
-                "date": day,
-                "income": 0,
-                "expense": 0,
-                "balance": 0
-            }
-
-        if t.type == "income":
-            report[day]["income"] += t.amount
-        elif t.type == "expense":
-            report[day]["expense"] += t.amount
-
-        report[day]["balance"] = (
-            report[day]["income"] - report[day]["expense"]
-        )
-
-    return list(report.values())
-
-@budget_bp.route("/budget/monthly-report")
-def monthly_report():
-    month = request.args.get("month")
-    start_date = request.args.get("start_date")
-    end_date = request.args.get("end_date")
-
-    if not month:
-        month=date.today().strftime("%Y-%m")
-
-    report_data = get_monthly_report(
-        month=month,
-        start_date=start_date,
-        end_date=end_date
-    )
-
-    total_income = sum(row["income"] for row in report_data)
-    total_expense = sum(row["expense"] for row in report_data)
-    balance = total_income - total_expense
-
-    return render_template(
-        "budget/monthly_report.html",
-        report_data=report_data,
-        total_income=total_income,
-        total_expense=total_expense,
-        balance=balance,
-        month=month
-    ) """
 
 @budget_bp.route("/budget/daily-summary")
 def daily_summary():
@@ -327,7 +248,42 @@ def daily_summary():
         month=selected_month,
         period_display=period_display
     )
+#Show note
+@budget_bp.route("/show-note")
+def show_note():
+    notes=Note.query.all()
+    return render_template(
+        "budget/note.html",
+        notes=notes
+    )
 
 
+# Add note
+@budget_bp.route("/add-note",methods=["POST"])
+def add_note():
+    note_text=request.form["note"]
+    db.session.add(Note(
+        content=note_text
+    ))
+    db.session.commit()
+    return redirect(url_for("budget.show_note"))
 
+#Edit note
+@budget_bp.route("/edit-note/<int:id>",methods=["POST"])
+def edit_note(id):
+    note=Note.query.get(id)
+    if not note:
+        return jsonify({"error":"Note not found"}),404
+    note.content=request.form["note"]
+    db.session.commit()
+    return redirect(url_for("budget.show_note"))
+  
+
+#Delete note
+@budget_bp.route("/delete-note/<int:id>",methods=["POST"])
+def delete_note(id):
+    note=Note.query.get_or_404(id)
+    db.session.delete(note)
+    db.session.commit()
+    return redirect(url_for("budget.show_note"))
 

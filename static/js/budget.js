@@ -93,6 +93,26 @@ function editRow(button){
     };
 }
 
+function editNote(button){
+    const form=button.closest("form");
+    const saveButton=form.querySelector('button[type="submit"]');
+    button.style.display="none";
+    saveButton.style.display="inline-block";
+    input.focus();
+
+
+}
+
+function deleteNote(id){
+    if(confirm("Are you sure you want to delete this note?")){
+        const form=document.createElement("form");
+        form.method="POST";
+        form.action="/delete-note/"+id;
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
 function saveRow(row, button) {
     let id = row.dataset.id;
     let inputs = row.querySelectorAll("input");

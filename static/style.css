@@ -96,10 +96,6 @@ h2,
     gap: 8px;
 }
 
-.g-3 {
-    gap: 12px;
-}
-
 .align-items-center {
     align-items: center;
 }
@@ -823,6 +819,8 @@ bottom:20px;
 .summary-card {
     border-radius: 12px;
     transition: transform 0.2s ease-in-out;
+    width:100%;
+    margin:0;
 }
 
 .summary-card:hover {
@@ -837,6 +835,82 @@ bottom:20px;
 
     .summary-card h3 {
         font-size: 20px;
+    }
+}
+
+.plotly-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.plotly-container .plotly-graph-div {
+    width: 100% !important;
+}
+
+/* Desktop sidebar */
+@media (min-width: 992px) {
+    .offcanvas-lg {
+        position: static;
+        transform: none !important;
+        visibility: visible !important;
+        width: 260px;
+        border-right: 1px solid #dee2e6;
+        background: #fff;
+    }
+
+    .offcanvas-backdrop {
+        display: none;
+    }
+
+    .offcanvas-header .btn-close {
+        display: none;
+    }
+}
+
+/* Active menu item */
+.list-group-item.active {
+    background-color: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
+.list-group-item i {
+    width: 22px;
+}
+
+/* ===== Note Page Only ===== */
+
+.note-card {
+    border: none;
+    border-radius: 12px;
+}
+
+.note-card-body {
+    padding: 1rem;
+}
+
+.note-input {
+    border-radius: 8px;
+}
+
+.note-btn {
+    min-width: 90px;
+    border-radius: 8px;
+}
+
+.note-card .d-flex {
+    align-items: center;
+}
+
+@media (max-width: 576px) {
+
+    .note-card .d-flex {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .note-btn {
+        width: 100%;
     }
 }
 

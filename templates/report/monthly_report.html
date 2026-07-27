@@ -21,21 +21,21 @@
 
                 <div class="col-12 col-md-4">
                     <div class="card shadow-sm border-0 text-center p-3 summary-card income">
-                        <h6>Income</h6>
+                        <h6>Total Income</h6>
                         <h3 class="text-success">{{ "%.2f"|format(total_income) }}</h3>
                     </div>
                 </div>
 
                 <div class="col-12 col-md-4">
                     <div class="card shadow-sm border-0 text-center p-3 summary-card expense">
-                        <h6>Expense</h6>
+                        <h6>Total Expense</h6>
                         <h3 class="text-danger">{{ "%.2f"|format(total_expense) }}</h3>
                     </div>
                 </div>
 
                 <div class="col-12 col-md-4">
                     <div class="card shadow-sm border-0 text-center p-3 summary-card balance">
-                        <h6>Balance</h6>
+                        <h6>Total Balance</h6>
                         <h3 class="text-primary">{{ "%.2f"|format(balance) }}</h3>
                     </div>
                 </div>
@@ -44,8 +44,10 @@
 
             <!-- Chart -->
             <div class="card shadow-sm border-0 mb-4">
-                <div class="card-body p-2 p-md-3">
-                    {{ chart|safe }}
+                <div class="card-body">
+                    <div class="plotly-container" style="width:100%">
+                        {{ chart|safe }}
+                    </div>
                 </div>
             </div>
 
