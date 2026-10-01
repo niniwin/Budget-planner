@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Admin Users{% endblock %}
+
+{% block content %}
+<div class="budget-layout">
+    {% include "budget/_sidebar.html" %}
+
+    <main class="budget-content">
+        <div class="diary-box">
+            <h2 class="page-heading text-center mb-4">Admin Users</h2>
+
+            <div class="table-responsive">
+                <table class="table admin-users-table align-middle">
+                    <thead>
+                        <tr>
+                            <th class="user-id-col">ID</th>
+                            <th>Username</th>
+                            <th class="user-email-col">Email</th>
+                            <th>Provider</th>
+                            <th>Role</th>
+                            <th>Change Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td class="user-id-col">#{{ user.id }}</td>
+                            <td class="user-name">{{ user.username }}</td>
+                            <td class="user-email-col" title="{{ user.email or '' }}">{{ user.email or "-" }}</td>
+                            <td><span class="provider-badge">{{ user.oauth_provider or "password" }}</span></td>
+                            <td><span class="role-badge role-{{ user.role }}">{{ user.role }}</span></td>
+                            <td>
+                                <form method="post" class="admin-role-form">
+                                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                                    <select class="form-control" name="role">
+                                        <option value="user" {% if user.role == "user" %}selected{% endif %}>User</option>
+                                        <option value="admin" {% if user.role == "admin" %}selected{% endif %}>Admin</option>
+                                    </select>
+                                    <button type="submit" class="btn admin-save-btn">
+                                        <i class="bi bi-check2"></i> Save
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

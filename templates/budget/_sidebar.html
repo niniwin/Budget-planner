@@ -30,9 +30,21 @@
     <a href="{{ url_for('budget.show_note') }}" class="sidebar-link">
         <i class="bi bi-journal-text"></i> Add Note
     </a>
+    <a href="{{ url_for('auth.change_password') }}" class="sidebar-link">
+        <i class="bi bi-key"></i> Change Password
+    </a>
  
     <a href="{{ url_for('budget.backup_transactions') }}" class="sidebar-link">
         <i class="bi bi-download"></i> Backup Data
     </a>
+    {% if current_user.is_authenticated and current_user.is_admin %}
+    <a href="{{ url_for('auth.admin_users') }}" class="sidebar-link">
+        <i class="bi bi-shield-lock"></i> Admin
+    </a>
+    {% endif %}
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('auth.logout') }}" class="sidebar-link">
+        <i class="bi bi-box-arrow-right"></i> Logout
+    </a>
+    {% endif %}
 </nav>
-

@@ -5,6 +5,10 @@ from sqlalchemy import Enum
 
 class Transaction(db.Model):
     __tablename__='transactions'
+    __table_args__ = (
+        db.Index("ix_transactions_date", "date"),
+        db.Index("ix_transactions_user_date", "user_id", "date"),
+    )
 
     id=db.Column(db.Integer,primary_key=True)
     amount = db.Column(db.Numeric(12,2),nullable=False)
