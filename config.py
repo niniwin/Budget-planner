@@ -1,4 +1,6 @@
-﻿from dotenv import load_dotenv
+from datetime import timedelta
+
+from dotenv import load_dotenv
 import os
 
 load_dotenv()
@@ -18,6 +20,9 @@ def get_database_url():
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-key-before-production")
+    # Refresh the expiry on each request so active users remain signed in.
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=15)
+    SESSION_REFRESH_EACH_REQUEST = True
     SQLALCHEMY_DATABASE_URI = get_database_url()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # Existing deployments can skip schema checks on every cold start.

@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from flask import Flask
 from flask_login import LoginManager
 
@@ -11,8 +9,6 @@ from routes.report_routes import report_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
-
-app.permanent_session_lifetime = timedelta(minutes=5)
 
 db.init_app(app)
 login_manager = LoginManager()

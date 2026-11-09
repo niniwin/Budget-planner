@@ -3,7 +3,7 @@ from email.message import EmailMessage
 import smtplib
 
 from authlib.integrations.flask_client import OAuth
-from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
+from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 
@@ -141,6 +141,7 @@ def login():
 
         if user and user.check_password(password):
             login_user(user, remember=bool(request.form.get("remember")))
+            session.permanent = True
             flash("Welcome back.", "success")
             next_url = request.args.get("next")
             return redirect(next_url or url_for("budget.planner"))
@@ -278,6 +279,7 @@ def oauth_callback():
 
     db.session.commit()
     login_user(user)
+    session.permanent = True
     flash("Signed in with OAuth.", "success")
     return redirect(url_for("budget.planner"))
 
